@@ -2,19 +2,19 @@ import streamlit as st
 from transformers import AutoTokenizer, AutoModelForCausalLM
 import torch
 
-# --- モデル読み込み ---
+# モデル読み込み
 tokenizer = AutoTokenizer.from_pretrained("cyberagent/open-calm-1b")
 model = AutoModelForCausalLM.from_pretrained("cyberagent/open-calm-1b")
 
-# --- ユーザー管理（簡易的にセッション内で） ---
+# ユーザーとセッション管理
 if 'users' not in st.session_state:
-    st.session_state.users = {}  # {'user1': 'pass1', ...}
+    st.session_state.users = {}
 
 if 'current_user' not in st.session_state:
     st.session_state.current_user = None
 
 if 'chat_history' not in st.session_state:
-    st.session_state.chat_history = {}  # {user: {subject: [(Q, A), ...]}}
+    st.session_state.chat_history = {}
 
 if 'subject' not in st.session_state:
     st.session_state.subject = []
@@ -22,9 +22,8 @@ if 'subject' not in st.session_state:
 if 'materials' not in st.session_state:
     st.session_state.materials = {}
 
-# --- 認証UI ---
+# --- 認証画面 ---
 st.sidebar.title("ログイン / 新規登録")
-
 auth_mode = st.sidebar.radio("モード選択", ["ログイン", "新規登録"])
 username = st.sidebar.text_input("ユーザー名")
 password = st.sidebar.text_input("パスワード", type="password")
@@ -44,12 +43,12 @@ elif auth_mode == "ログイン":
         else:
             st.sidebar.error("ユーザー名またはパスワードが間違っています")
 
-# --- ログイン後のみ機能使用可能 ---
+# --- ログイン後のUI ---
 if st.session_state.current_user:
     user = st.session_state.current_user
     st.title(f"ようこそ, {user} さん！")
 
-    # --- 授業管理 ---
+    # 授業の追加・削除
     input_subject = st.sidebar.text_input('追加したい授業名を入力')
     if input_subject:
         if input_subject not in st.session_state.subject:
@@ -64,7 +63,7 @@ if st.session_state.current_user:
 
     select_subject = st.sidebar.selectbox('授業を選択してください', st.session_state.subject)
 
-    # --- 資料アップロード ---
+    # 授業資料アップロード
     st.subheader(f"選択中の授業: {select_subject}")
     uploaded_file = st.file_uploader("授業資料をアップロード（.txt）", type=["txt"])
     if uploaded_file:
@@ -72,7 +71,7 @@ if st.session_state.current_user:
         st.session_state.materials[select_subject] = content
         st.success(f"{select_subject} の資料を保存しました")
 
-    # --- 質問 ---
+    # チャット入力
     input_chat = st.text_area("授業に関する質問を入力してください")
 
     if st.button("送信"):
@@ -87,12 +86,12 @@ if st.session_state.current_user:
         st.write("AIの回答:")
         st.write(answer_cleaned)
 
-        # --- チャット履歴保存 ---
+        # 履歴保存
         user_hist = st.session_state.chat_history.setdefault(user, {})
         subject_hist = user_hist.setdefault(select_subject, [])
         subject_hist.append((input_chat, answer_cleaned))
 
-    # --- チャット履歴表示 ---
+    # 履歴表示
     st.markdown("### チャット履歴")
     history = st.session_state.chat_history.get(user, {}).get(select_subject, [])
     for i, (q, a) in enumerate(history[::-1], 1):
@@ -102,4 +101,3 @@ if st.session_state.current_user:
 
 else:
     st.warning("ログインしてください")
-
