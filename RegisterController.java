@@ -1,4 +1,4 @@
-package com.example.cocosuku.controller;
+package com.example.cocosuku;
 
 import com.example.cocosuku.service.UserService;
 import jakarta.servlet.http.HttpSession;
