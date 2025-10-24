@@ -1,4 +1,4 @@
-package com.example.cocosuku.dao;
+package com.example.cocosuku;
 
 import com.example.cocosuku.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
