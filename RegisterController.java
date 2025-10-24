@@ -28,4 +28,25 @@ public class RegisterController {
             return "NG";
         }
     }
+    @PostMapping("/register")
+    public String register(
+        @RequestParam String name,
+        @RequestParam String email,
+        @RequestParam String password,
+        HttpSession session) {
+    try {
+        int createdId = userService.register(name, email, password);
+        if (createdId > 0) {
+            session.setAttribute("email", email);
+            session.setAttribute("userid", createdId);
+            return "OK";
+        } else {
+            return "DUPLICATE"; // 重複
+        }
+    } catch (Exception e) {
+        e.printStackTrace(); // ここで実際のエラーをコンソールに出す
+        return "ERROR";
+    }
+}
+
 }
