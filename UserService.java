@@ -1,4 +1,4 @@
-package com.example.cocosuku.service;
+package com.example.cocosuku;
 
 import com.example.cocosuku.dao.UserDao;
 import com.example.cocosuku.model.User;
