@@ -1,4 +1,4 @@
-package com.example.cocosuku;
+package com.example.cocosuku.Service;
 
 import com.example.cocosuku.dao.UserDao;
 import com.example.cocosuku.model.User;
@@ -45,3 +45,4 @@ public class UserService {
         return userDao.createUser(u);
     }
 }
+
