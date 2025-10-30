@@ -1,4 +1,4 @@
-package com.example.cocosuku;
+package com.example.cocosuku.Dao;
 
 import com.example.cocosuku.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,4 +48,5 @@ public class UserDao {
         return key != null ? key.intValue() : -1;
     }
 }
+
 
